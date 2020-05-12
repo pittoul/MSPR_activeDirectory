@@ -50,6 +50,31 @@ class User implements UserInterface, TwoFactorInterface
      */
     private $googleAuthenticatorSecret;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $infosNavigateur = [];
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     */
+    private $ipUser;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": "0"})
+     */
+    private $nbreDeTentatives;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private $estAutorise;
+
+    /**
+     * @ORM\Column(type="date", options={"default": "CURRENT_TIMESTAMP"})
+     */
+    private $dateDerniereConnexion;
+
     public function isGoogleAuthenticatorEnabled(): bool
     {
         return $this->googleAuthenticatorSecret ? true : false;
@@ -170,6 +195,66 @@ class User implements UserInterface, TwoFactorInterface
     public function setCheckPassword($checkPassword)
     {
         $this->checkPassword = $checkPassword;
+
+        return $this;
+    }
+
+    public function getInfosNavigateur(): ?array
+    {
+        return $this->infosNavigateur;
+    }
+
+    public function setInfosNavigateur(array $infosNavigateur): self
+    {
+        $this->infosNavigateur = $infosNavigateur;
+
+        return $this;
+    }
+
+    public function getIpUser(): ?string
+    {
+        return $this->ipUser;
+    }
+
+    public function setIpUser(string $ipUser): self
+    {
+        $this->ipUser = $ipUser;
+
+        return $this;
+    }
+
+    public function getNbreDeTentatives(): ?int
+    {
+        return $this->nbreDeTentatives;
+    }
+
+    public function setNbreDeTentatives(int $nbreDeTentatives): self
+    {
+        $this->nbreDeTentatives = $nbreDeTentatives;
+
+        return $this;
+    }
+
+    public function getEstAutorise(): ?bool
+    {
+        return $this->estAutorise;
+    }
+
+    public function setEstAutorise(bool $estAutorise): self
+    {
+        $this->estAutorise = $estAutorise;
+
+        return $this;
+    }
+
+    public function getDateDerniereConnexion(): ?\DateTimeInterface
+    {
+        return $this->dateDerniereConnexion;
+    }
+
+    public function setDateDerniereConnexion(?\DateTimeInterface $dateDerniereConnexion): self
+    {
+        $this->dateDerniereConnexion = $dateDerniereConnexion;
 
         return $this;
     }  
