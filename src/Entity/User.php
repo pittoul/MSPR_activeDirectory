@@ -71,7 +71,7 @@ class User implements UserInterface, TwoFactorInterface
     private $estAutorise;
 
     /**
-     * @ORM\Column(type="date", options={"default": "CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
      */
     private $dateDerniereConnexion;
 
