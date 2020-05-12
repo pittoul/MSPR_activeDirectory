@@ -50,6 +50,13 @@ class RegistrationController extends AbstractController
                     )
                 );
                 $user->setGoogleAuthenticatorSecret($googleAuthenticatorInterface->generateSecret());
+                // $nbreTentatives = $user->getNbreDeTentatives + 1;
+                $user->setNbreDeTentatives(0);
+                $user->setEstAutorise(true);
+                $user->setDateDerniereConnexion(new \DateTime());
+                // $user->setIpUser($form->get('ipUser')); // inutile et cause une erreur ! puisque le user est rempli par defaut !
+                // var_dump($user->getIpUser());
+                // die();
                 //  Petite modif en ajoutant dans la signature de la fonction le EntityManagerInterfce, c'est une injection de dependance
                 // $entityManager = $this->getDoctrine()->getManager();
                 // $entityManager->persist($user);
