@@ -51,6 +51,7 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
             'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
+            'infosUser' => $request->request->get('infosUser'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
@@ -68,10 +69,27 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
-
+        // var_dump(json_decode($credentials['infosUser'], true));
+        // var_dump($user->getInfosNavigateur());
+        // var_dump(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur()));
+        // ATTENTION A LA COMPARAISON !!!
+        // die();
+        if ($user->getInfosNavigateur()) {
+            if (sizeof(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur())) > 0) { // comparaison pas bonne user un foreach
+                // envoyer un mail 
+                // die('coucou');
+                $user->setInfosNavigateur(json_decode($credentials['infosUser'], true));
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
+        } else {
+            $user->setInfosNavigateur(json_decode($credentials['infosUser'], true));
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        }
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Quelque chose s\'est mal passé...');
         }
 
         return $user;

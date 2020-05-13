@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+<div>
 	<img
 	id="imageQRcode" name="imageQRcode" src="{{ url }}" alt=""/>
 	{# pour l'action, on aurait pu mettre '/2fa' mais on a choisi de mettre le NOM de la route #}
@@ -14,4 +15,5 @@
 	<p>
 		<a href="{{ path('app_logout') }}">Annuler</a>
 	</p>
+	</div>
 {% endblock %}
