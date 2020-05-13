@@ -71,8 +71,9 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
         // var_dump(json_decode($credentials['infosUser'], true));
         // var_dump($user->getInfosNavigateur());
+        // var_dump($user->getIpUser());
         // var_dump(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur()));
-        // ATTENTION A LA COMPARAISON !!!
+        // FAIRE IDEM POUR L'IP !!!!
         // die();
         if ($user->getInfosNavigateur()) {
             if (sizeof(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur())) > 0) { // comparaison pas bonne user un foreach
