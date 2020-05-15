@@ -41,4 +41,8 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         # on utilise IS_AUTHENTICATED_FULLY pour l'acces à la route home seulement pour les users connectés
         - { path: ^/home, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/medecin, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/medecinn, roles: ROLE_MEDECIN }
+        # - { path: ^/secretaire, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/secretaire, roles: ROLE_SECRETAIRE }
         - { path: ^/2fa, roles: IS_AUTHENTICATED_2FA_IN_PROGRESS }

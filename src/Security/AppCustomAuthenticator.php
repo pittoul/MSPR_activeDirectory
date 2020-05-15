@@ -70,29 +70,49 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
-
-        // var_dump(json_decode($credentials['infosUser'], true));
-        // var_dump($user->getInfosNavigateur());
-        // var_dump($user->getIpUser());
-        // var_dump(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur()));
+        // $roleArrayFromAPI = [];
+        //  METTRE ICI LE CURL DE L'API qui retournera la valeur du role (et du $passwordActiveDirectoryEncoded ?)
+        // $user->setRoles($roleArrayFromAPI);
 
         // FAIRE IDEM POUR L'IP !!!!
-        // et pour LA DATE DE CONNEXION
+        // et pour LA DATE DE CONNEXION (creer table historique.... et table clinique)
         // et NOMBRE DE TENTATIVES
 
-        // die();
+        /**
+         * 
+         * Comparer les IP, 
+         * 
+         */
 
+        // if ($user->getIpUser() != $credentials['ipUser']) {
+            // Envoyer un simple mail d'information
+        // }
+        // if(ADRESSE IP HORS FRANCE){
+        // envoyer le mail de connexion
+        // https://symfony.com/doc/current/email.html
+        // }
 
+        /**
+         * Enregistrement des infos du navigateur et envoie d'un mail avec un code pour la connexion :
+         * Dans le mail, inclure un lien vers lapage de connexion assorti d'un code unique dans l'url 
+         * qui servira à valider que la personne peut se connecter.
+         * 
+         * Ensuite seulement, on pourra enregistrer les infos du navigateur
+         */
         if ($user->getInfosNavigateur()) {
             if (sizeof(array_diff_assoc(json_decode($credentials['infosUser'], true), $user->getInfosNavigateur())) > 0) {
-                // envoyer un mail 
-                // die('coucou');
-                $user->setInfosNavigateur(json_decode($credentials['infosUser'], true));
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
+                // Changement de navigateur : envoyer un mail pour la connexion
+                // https://symfony.com/doc/current/email.html
+                // CREER FONCTION : envoyerMailDeConnexion($codeUnique, $user)
+
+                // $user->setInfosNavigateur(json_decode($credentials['infosUser'], true));
+                // $this->entityManager->persist($user);
+                // $this->entityManager->flush();
+                return false;
             }
         } else {
             $user->setInfosNavigateur(json_decode($credentials['infosUser'], true));
+            // Mise à jour des infos du user, notemment le role et les infos du navigateur
             $this->entityManager->persist($user);
             $this->entityManager->flush();
         }
@@ -106,6 +126,19 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        $passwordSaisiEncoded = $this->passwordEncoder->encodePassword($user, $credentials['password']);
+        $passwordActiveDirectoryEncoded = "";
+
+        // METTRE ICI LE CURL DE L'API qui retournera la valeur de $passwordActiveDirectoryEncoded (et le ROLE ?)
+
+        // lignes à décommenter quand l'API sera fonctionnelle
+        // if ($passwordActiveDirectoryEncoded === $passwordSaisiEncoded) {
+        //     return true;
+        // }
+        // return false;
+
+
+        // ligne à commenter quand l'API sera fonctionnelle
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
@@ -123,7 +156,17 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
+        // Quand on est correctement loggué :
+
+        // if ($user->getRoles() === ['medecin']) {
+        //  return new RedirectResponse($this->urlGenerator->generate('app_medecin'));
+        // }
+
+        // if ($user->getRoles() === ['secretaire']) {
+        //  return new RedirectResponse($this->urlGenerator->generate('app_secretaire'));
+        // }
+
+        // ligne à commenter quand l'API sera fonctionnelle
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
